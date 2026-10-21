@@ -1,12 +1,11 @@
-import { useState } from 'react'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      
+    <img src="/src/assets/logoMW.png" alt="logo" />
+    <textarea no placeholder="Entrer un pseudo" rows="4" cols="50"></textarea>
+    <button>Click me</button>
     </>
   )
 }
