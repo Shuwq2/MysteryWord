@@ -1,7 +1,0 @@
-/* grille de 6 lignes de 5 cases */
-
-.grille {
-    display: grid; /* active le mode grille */
-    grid-template-columns: repeat(5, 1fr); /* 5 colonnes de largeur égale */
-    grid-template-rows: repeat(6, 1fr); /* 6 lignes de hauteur égale */
-}
