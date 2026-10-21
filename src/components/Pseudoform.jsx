@@ -18,9 +18,9 @@ export default function Pseudoform() {
     }
 
     return (
+        <div>
             <form onSubmit={appliquerPseudo}>
                 <textarea
-                    value={pseudoApplique ? `Le pseudo « ${pseudoApplique} » a bien été sélectionné.` : pseudo}
                     onChange={(event) => {
                         setPseudoApplique('')
                         setPseudo(event.target.value)
@@ -35,6 +35,7 @@ export default function Pseudoform() {
                     Pseudo enregistré : <strong>{pseudoApplique}</strong>
                 </p>
             )}
+        </div>
     )
     
 }
