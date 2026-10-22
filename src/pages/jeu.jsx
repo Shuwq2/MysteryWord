@@ -1,4 +1,4 @@
-import './Jeu.css';
+import './jeu.css';
 import Grille from '../components/Grille.jsx';
 
 function Jeu() {

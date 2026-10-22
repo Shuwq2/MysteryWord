@@ -5,7 +5,7 @@ export default function Playbutton() {
 
   return (
     <button 
-    type="submit"
+    type="button"
     onClick={() => navigate('/jeu')}>Lancer la partie</button>
   )
 }
