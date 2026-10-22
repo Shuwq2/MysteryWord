@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { normaliserMot, tirerMotSecret, verifierProposition } from '../utils/wordle.js';
+import { enregistrerScore } from '../utils/classement.js';
 
 const NOMBRE_DE_LIGNES = 6;
 const POINTS_PAR_ESSAI = [600, 500, 400, 300, 200, 100];
@@ -32,6 +33,15 @@ export default function useWordle(motsSecrets, longueurDuMot) {
             document.removeEventListener('visibilitychange', reprendreSaisie);
         };
     }, [essais.length, resultatPartie, verificationEnCours]);
+
+    useEffect(() => {
+        if (!resultatPartie) {
+            return;
+        }
+
+        const pseudo = localStorage.getItem('mysteryword-pseudo') || '';
+        enregistrerScore(pseudo, resultatPartie.score);
+    }, [resultatPartie]);
 
     function activerSaisie() {
         if (!resultatPartie && !verificationEnCours) {
