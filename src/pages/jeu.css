@@ -1,0 +1,110 @@
+.Jeu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    padding: 32px 16px;
+}
+
+.grille {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap: 8px;
+    width: min(90vw, 360px);
+}
+
+.case {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    border: 2px solid #d1d5db;
+    border-radius: 6px;
+    background-color: #f8fafc;
+    color: #1f2937;
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.case.vert {
+    border-color: #16a34a;
+    background-color: #22c55e;
+    color: white;
+}
+
+.case.jaune {
+    border-color: #ca8a04;
+    background-color: #facc15;
+    color: #422006;
+}
+
+.case.gris {
+    border-color: #4b5563;
+    background-color: #6b7280;
+    color: white;
+}
+
+.grille-form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.saisie-grille {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.case {
+    width: 100%;
+    padding: 0;
+    font: inherit;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.message-fin {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.actions-fin {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.bouton-rejouer,
+.bouton-menu {
+    border: 0;
+    border-radius: 6px;
+    padding: 10px 16px;
+    color: white;
+    cursor: pointer;
+    font: inherit;
+}
+
+.bouton-rejouer {
+    background-color: #2563eb;
+}
+
+.bouton-rejouer:hover {
+    background-color: #1d4ed8;
+}
+
+.bouton-menu {
+    background-color: #475569;
+}
+
+.bouton-menu:hover {
+    background-color: #334155;
+}
