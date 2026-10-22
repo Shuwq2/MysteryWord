@@ -1,98 +1,52 @@
-import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import FinPartie from './FinPartie.jsx';
+import useWordle from '../hooks/useWordle.js';
 
 const NOMBRE_DE_LIGNES = 6;
 const LONGUEUR_DU_MOT = 5;
-const MOT_SECRET = 'POMME';
-const POINTS_PAR_ESSAI = [600, 500, 400, 300, 200, 100];
-
-function verifierProposition(proposition) {
-    const resultats = Array(LONGUEUR_DU_MOT).fill('gris');
-    const lettresDisponibles = MOT_SECRET.split('');
-
-    proposition.split('').forEach((lettre, index) => {
-        if (lettre === MOT_SECRET[index]) {
-            resultats[index] = 'vert';
-            lettresDisponibles[index] = null;
-        }
-    });
-
-    proposition.split('').forEach((lettre, index) => {
-        if (resultats[index] === 'vert') {
-            return;
-        }
-
-        const position = lettresDisponibles.indexOf(lettre);
-        if (position !== -1) {
-            resultats[index] = 'jaune';
-            lettresDisponibles[position] = null;
-        }
-    });
-
-    return resultats;
-}
+const MOTS_SECRETS = [
+    "abord", "acier", "aider", "aimer", "ailes", "amour", "ancre", "angle", "avant", "avion",
+    "balai", "balle", "bande", "barbe", "barre", "bidon", "blanc", "blond", "boire", "bonne",
+    "botte", "boule", "brise", "bruit", "brume", "bulle", "buste", "cadre", "cable", "calme",
+    "canal", "carte", "casse", "cause", "chair", "champ", "chant", "chats", "chaud", "chefs",
+    "chien", "choix", "chose", "cible", "civil", "clair", "clefs", "coeur", "corps", "cours",
+    "crise", "cycle", "danse", "dents", "doigt", "doute", "drame", "droit", "durer", "effet",
+    "email", "ennui", "entre", "envie", "essai", "exact", "fable", "faire", "faute", "femme",
+    "ferme", "fiche", "fleur", "foire", "force", "forme", "foule", "frais", "franc", "froid",
+    "fruit", "fumer", "futur", "gagne", "galop", "garde", "genou", "genre", "glace", "gorge",
+    "grace", "grand", "grave", "grise", "guide", "herbe", "heure", "hiver", "homme", "huile",
+    "image", "jambe", "jaune", "jeune", "jouer", "jours", "juste", "laine", "lacet", "lames",
+    "large", "larme", "lever", "liens", "ligne", "livre", "local", "loger", "lourd", "loups",
+    "lueur", "lundi", "lutte", "magie", "maire", "marge", "masse", "match", "mener", "merci",
+    "mieux", "moins", "monde", "monte", "motif", "moule", "neige", "niche", "noble", "noces",
+    "notes", "nuage", "nuits", "objet", "ombre", "ordre", "outil", "ouest", "ouvre", "ovale",
+    "pages", "paire", "panne", "parce", "parti", "passe", "patte", "pause", "payer", "peine",
+    "petit", "piano", "pieds", "piste", "place", "plage", "plein", "pluie", "plume", "poche",
+    "poids", "point", "poire", "poser", "poste", "pouce", "poule", "prise", "proie", "puits",
+    "quand", "queue", "radio", "rayon", "reine", "repas", "reste", "rouge", "route", "ruban",
+    "sable", "saint", "salle", "salon", "sauce", "savon", "scene", "selon", "serre", "seuil",
+    "signe", "singe", "sirop", "soeur", "soins", "sorte", "souci", "soupe", "sourd", "sucre",
+    "sujet", "super", "table", "tache", "talon", "tapis", "tarte", "tasse", "temps", "tenir",
+    "terme", "terre", "texte", "tigre", "titre", "toile", "tombe", "total", "tours", "train",
+    "trait", "trois", "trous", "tuile", "union", "usage", "usine", "utile", "vague", "valse",
+    "vaste", "veine", "vente", "verbe", "verre", "vider", "vieux", "ville", "vingt", "vitre",
+    "vivre", "voile", "voler", "volet", "votre", "vrais", "zones", "zeste", "yacht", "album",
+    "adieu", "agent", "ainsi", "aigle", "alors", "appel", "arbre", "aussi", "autre", "avril",
+    "bague", "beaux", "bijou", "bocal", "canne", "chute", "clown", "colle", "comme", "copie",
+    "coupe", "court", "crier", "croix", "dalle", "dette", "devis", "dites", "ecran", "gamin",
+    "gants", "givre", "golfe", "gomme", "grain", "habit", "jeudi", "jolie", "jouet", "laver"
+];
 
 export default function Grille() {
-    const [proposition, setProposition] = useState(Array(LONGUEUR_DU_MOT).fill(''));
-    const [essais, setEssais] = useState([]);
-    const [resultatPartie, setResultatPartie] = useState(null);
-    const saisieRef = useRef(null);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!resultatPartie) {
-            saisieRef.current?.focus();
-        }
-    }, [essais.length, resultatPartie]);
-
-    function validerProposition(event) {
-        event.preventDefault();
-
-        const mot = proposition.join('').toUpperCase();
-        if (
-            mot.length !== LONGUEUR_DU_MOT
-            || essais.length === NOMBRE_DE_LIGNES
-            || resultatPartie
-        ) {
-            return;
-        }
-
-        const resultats = verifierProposition(mot);
-        const nouveauxEssais = [...essais, {
-            lettres: mot.split(''),
-            resultats,
-        }];
-
-        setEssais(nouveauxEssais);
-        setProposition(Array(LONGUEUR_DU_MOT).fill(''));
-
-        if (resultats.every((resultat) => resultat === 'vert')) {
-            setResultatPartie({
-                statut: 'victoire',
-                score: POINTS_PAR_ESSAI[nouveauxEssais.length - 1],
-            });
-        } else if (nouveauxEssais.length === NOMBRE_DE_LIGNES) {
-            setResultatPartie({
-                statut: 'defaite',
-                score: 0,
-            });
-        }
-    }
-
-    function saisirProposition(event) {
-        const mot = event.target.value
-            .replace(/[^a-z]/gi, '')
-            .toUpperCase()
-            .slice(0, LONGUEUR_DU_MOT);
-
-        setProposition(mot.split('').concat(Array(LONGUEUR_DU_MOT).fill('')).slice(0, LONGUEUR_DU_MOT));
-    }
-
-    function relancerPartie() {
-        setProposition(Array(LONGUEUR_DU_MOT).fill(''));
-        setEssais([]);
-        setResultatPartie(null);
-    }
+    const {
+        essais,
+        motSecret,
+        proposition,
+        resultatPartie,
+        saisieRef,
+        relancerPartie,
+        saisirProposition,
+        validerProposition,
+    } = useWordle(MOTS_SECRETS, LONGUEUR_DU_MOT);
 
     return (
         <form className="grille-form" onSubmit={validerProposition}>
@@ -111,19 +65,12 @@ export default function Grille() {
                     Array.from({ length: LONGUEUR_DU_MOT }, (_, colonne) => {
                         const essai = essais[ligne];
                         const ligneActive = ligne === essais.length;
-                        const lettre = essai?.lettres[colonne] ?? '';
+                        const lettre = essai?.lettres[colonne]
+                            ?? (ligneActive ? proposition[colonne] : '');
                         const resultat = essai?.resultats[colonne] ?? '';
 
-                        if (ligneActive && essais.length < NOMBRE_DE_LIGNES) {
-                            return (
-                                <div className="case" key={`${ligne}-${colonne}`}>
-                                    {proposition[colonne]}
-                                </div>
-                            );
-                        }
-
                         return (
-                            <div className={`case ${resultat}`} key={`${ligne}-${colonne}`}>
+                            <div className={`case ${ligneActive ? '' : resultat}`} key={`${ligne}-${colonne}`}>
                                 {lettre}
                             </div>
                         );
@@ -131,29 +78,11 @@ export default function Grille() {
                 )}
             </div>
             {resultatPartie && (
-                <p className="message-fin" role="status">
-                    {resultatPartie.statut === 'victoire'
-                        ? `Victoire ! Score : ${resultatPartie.score} points.`
-                        : `Défaite ! Le mot était ${MOT_SECRET}. Score : 0 point.`}
-                </p>
-            )}
-            {resultatPartie && (
-                <div className="actions-fin">
-                    <button
-                        className="bouton-rejouer"
-                        type="button"
-                        onClick={relancerPartie}
-                    >
-                        Rejouer
-                    </button>
-                    <button
-                        className="bouton-menu"
-                        type="button"
-                        onClick={() => navigate('/Accueil')}
-                    >
-                        Retour au menu
-                    </button>
-                </div>
+                <FinPartie
+                    resultatPartie={resultatPartie}
+                    motSecret={motSecret}
+                    onRejouer={relancerPartie}
+                />
             )}
         </form>
     );
