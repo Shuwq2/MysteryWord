@@ -8,8 +8,16 @@ export default function FinPartie({ resultatPartie, motSecret, onRejouer }) {
             <p className="message-fin" role="status">
                 {resultatPartie.statut === 'victoire'
                     ? `Victoire ! Score : ${resultatPartie.score} points.`
-                    : `Défaite ! Le mot était ${motSecret}. Score : 0 point.`}
+                    : <>Défaite ! Le mot était <strong>{motSecret}</strong>. Score : 0 point.</>}
             </p>
+            <a
+                className="lien-wiktionnaire"
+                href={`https://fr.wiktionary.org/wiki/${encodeURIComponent(motSecret.toLowerCase())}`}
+                target="_blank"
+                rel="noreferrer"
+            >
+                Voir « {motSecret} » sur le Wiktionnaire
+            </a>
             <div className="actions-fin">
                 <button className="bouton-rejouer" type="button" onClick={onRejouer}>
                     Rejouer

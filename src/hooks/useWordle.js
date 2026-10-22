@@ -1,57 +1,93 @@
 import { useEffect, useRef, useState } from 'react';
-import { tirerMotSecret, verifierProposition } from '../utils/wordle.js';
+import { normaliserMot, tirerMotSecret, verifierProposition } from '../utils/wordle.js';
 
 const NOMBRE_DE_LIGNES = 6;
 const POINTS_PAR_ESSAI = [600, 500, 400, 300, 200, 100];
+const URL_API_WIKTIONNAIRE = 'https://fr.wiktionary.org/w/api.php';
+const DELAI_VERIFICATION = 5000;
 
 export default function useWordle(motsSecrets, longueurDuMot) {
     const [motSecret, setMotSecret] = useState(() => tirerMotSecret(motsSecrets));
     const [proposition, setProposition] = useState(() => Array(longueurDuMot).fill(''));
     const [essais, setEssais] = useState([]);
     const [resultatPartie, setResultatPartie] = useState(null);
+    const [verificationEnCours, setVerificationEnCours] = useState(false);
+    const [propositionRefusee, setPropositionRefusee] = useState(null);
+    const [avertissementApi, setAvertissementApi] = useState('');
     const saisieRef = useRef(null);
 
     useEffect(() => {
-        if (!resultatPartie) {
+        function reprendreSaisie() {
+            if (!resultatPartie && !verificationEnCours) {
+                saisieRef.current?.focus();
+            }
+        }
+
+        reprendreSaisie();
+        window.addEventListener('focus', reprendreSaisie);
+        document.addEventListener('visibilitychange', reprendreSaisie);
+
+        return () => {
+            window.removeEventListener('focus', reprendreSaisie);
+            document.removeEventListener('visibilitychange', reprendreSaisie);
+        };
+    }, [essais.length, resultatPartie, verificationEnCours]);
+
+    function activerSaisie() {
+        if (!resultatPartie && !verificationEnCours) {
             saisieRef.current?.focus();
         }
-    }, [essais.length, resultatPartie]);
+    }
 
     function validerProposition(event) {
         event.preventDefault();
 
-        const mot = proposition.join('').toUpperCase();
+        const mot = normaliserMot(proposition.join('').toUpperCase());
         if (
             mot.length !== longueurDuMot
             || essais.length === NOMBRE_DE_LIGNES
             || resultatPartie
+            || verificationEnCours
         ) {
             return;
         }
 
-        const resultats = verifierProposition(mot, motSecret);
-        const nouveauxEssais = [...essais, {
-            lettres: mot.split(''),
-            resultats,
-        }];
+        setVerificationEnCours(true);
+        setPropositionRefusee(null);
+        verifierMot(mot)
+            .then((motValide) => {
+                if (!motValide) {
+                    setPropositionRefusee(mot);
+                    setProposition(Array(longueurDuMot).fill(''));
+                    return;
+                }
 
-        setEssais(nouveauxEssais);
-        setProposition(Array(longueurDuMot).fill(''));
+                const resultats = verifierProposition(mot, motSecret);
+                const nouveauxEssais = [...essais, {
+                    lettres: mot.split(''),
+                    resultats,
+                }];
 
-        if (resultats.every((resultat) => resultat === 'vert')) {
-            setResultatPartie({
-                statut: 'victoire',
-                score: POINTS_PAR_ESSAI[nouveauxEssais.length - 1],
-            });
-        } else if (nouveauxEssais.length === NOMBRE_DE_LIGNES) {
-            setResultatPartie({
-                statut: 'defaite',
-                score: 0,
-            });
-        }
+                setEssais(nouveauxEssais);
+                setProposition(Array(longueurDuMot).fill(''));
+
+                if (resultats.every((resultat) => resultat === 'vert')) {
+                    setResultatPartie({
+                        statut: 'victoire',
+                        score: POINTS_PAR_ESSAI[nouveauxEssais.length - 1],
+                    });
+                } else if (nouveauxEssais.length === NOMBRE_DE_LIGNES) {
+                    setResultatPartie({
+                        statut: 'defaite',
+                        score: 0,
+                    });
+                }
+            })
+            .finally(() => setVerificationEnCours(false));
     }
 
     function saisirProposition(event) {
+        setPropositionRefusee(null);
         const mot = event.target.value
             .replace(/[^a-z]/gi, '')
             .toUpperCase()
@@ -65,6 +101,49 @@ export default function useWordle(motsSecrets, longueurDuMot) {
         setProposition(Array(longueurDuMot).fill(''));
         setEssais([]);
         setResultatPartie(null);
+        setVerificationEnCours(false);
+        setPropositionRefusee(null);
+        setAvertissementApi('');
+    }
+
+    async function verifierMot(mot) {
+        const controle = new AbortController();
+        const temporisateur = setTimeout(() => controle.abort(), DELAI_VERIFICATION);
+
+        try {
+            const parametres = new URLSearchParams({
+                action: 'parse',
+                page: mot.toLowerCase(),
+                prop: 'sections',
+                format: 'json',
+                origin: '*',
+            });
+            const reponse = await fetch(`${URL_API_WIKTIONNAIRE}?${parametres}`, {
+                signal: controle.signal,
+            });
+            if (!reponse.ok) {
+                throw new Error(`Wiktionnaire HTTP ${reponse.status}`);
+            }
+            const donnees = await reponse.json();
+            if (donnees.error && donnees.error.code !== 'missingtitle') {
+                throw new Error(`Wiktionnaire API ${donnees.error.code}`);
+            }
+            const sections = donnees.parse?.sections;
+            if (!Array.isArray(sections)) {
+                return false;
+            }
+            return sections.some((section) => {
+                const titre = section.line.replace(/<[^>]*>/g, '').trim();
+                return normaliserMot(titre).toLowerCase() === 'francais';
+            });
+        } catch {
+            setAvertissementApi(
+                "Le Wiktionnaire ne répond pas. L'essai est accepté exceptionnellement pour ne pas bloquer la partie.",
+            );
+            return true;
+        } finally {
+            clearTimeout(temporisateur);
+        }
     }
 
     return {
@@ -72,7 +151,11 @@ export default function useWordle(motsSecrets, longueurDuMot) {
         motSecret,
         proposition,
         resultatPartie,
+        verificationEnCours,
+        propositionRefusee,
+        avertissementApi,
         saisieRef,
+        activerSaisie,
         relancerPartie,
         saisirProposition,
         validerProposition,

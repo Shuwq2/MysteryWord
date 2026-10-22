@@ -45,6 +45,12 @@
     color: white;
 }
 
+.case.refusee {
+    border-color: #dc2626;
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
 .grille-form {
     position: relative;
     display: flex;
@@ -74,6 +80,30 @@
     font-size: 1.1rem;
     font-weight: 700;
     text-align: center;
+}
+
+.message-verification,
+.message-refus,
+.message-avertissement {
+    max-width: 360px;
+    margin: 0;
+    text-align: center;
+}
+
+.message-verification {
+    color: #2563eb;
+}
+
+.message-refus {
+    color: #b91c1c;
+}
+
+.message-avertissement {
+    color: #a16207;
+}
+
+.lien-wiktionnaire {
+    color: #1d4ed8;
 }
 
 .actions-fin {

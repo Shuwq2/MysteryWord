@@ -2,7 +2,13 @@ export function tirerMotSecret(mots) {
     return mots[Math.floor(Math.random() * mots.length)].toUpperCase();
 }
 
+export function normaliserMot(mot) {
+    return mot.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+}
+
 export function verifierProposition(proposition, motSecret) {
+    proposition = normaliserMot(proposition);
+    motSecret = normaliserMot(motSecret);
     const resultats = Array(motSecret.length).fill('gris');
     const lettresDisponibles = motSecret.split('');
 

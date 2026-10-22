@@ -1,5 +1,5 @@
-import './Jeu.css';
-import Grille from '../components/Grille.jsx';
+import './jeu.css';
+import Grille from '../components/grille.jsx';
 
 function Jeu() {
     return (
