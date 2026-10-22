@@ -17,7 +17,7 @@ export default function FinPartie({ resultatPartie, motSecret, onRejouer }) {
                 <button
                     className="bouton-menu"
                     type="button"
-                    onClick={() => navigate('/Accueil')}
+                    onClick={() => navigate('/')}
                 >
                     Retour au menu
                 </button>
