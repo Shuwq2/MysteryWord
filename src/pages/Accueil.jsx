@@ -3,8 +3,12 @@ import Playbutton from '../components/Playbutton'
 import Pseudoform from '../components/Pseudoform'
 import ClassementButton from '../components/ClassementButton'
 import StatistiquesButton from '../components/StatistiquesButton'
+import Classement from '../components/Classement'
+import { useNavigate } from 'react-router-dom'
 
 export default function Accueil() {
+  const navigate = useNavigate()
+
   return (
     <>
       <img src={logo} alt="Logo Mystery Word" />
@@ -15,6 +19,14 @@ export default function Accueil() {
         <ClassementButton />
         <StatistiquesButton />
       </div>
+      <button
+        className="bouton-regles-accueil"
+        type="button"
+        onClick={() => navigate('/regles')}
+      >
+        Voir les règles
+      </button>
+      <Classement />
     </>
   );
 }

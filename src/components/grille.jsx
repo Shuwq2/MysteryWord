@@ -86,9 +86,16 @@ export default function Grille() {
                             ?? (ligne === essais.length && propositionRefusee ? propositionRefusee[colonne] : undefined)
                             ?? (ligneActive ? proposition[colonne] : '');
                         const resultat = essai?.resultats[colonne] ?? '';
+                        const classeAnimation = essai
+                            ? 'case-retournee'
+                            : (propositionRefusee && ligneActive ? 'ligne-refusee' : '');
 
                         return (
-                            <div className={`case ${propositionRefusee && ligneActive ? 'refusee' : (ligneActive ? '' : resultat)}`} key={`${ligne}-${colonne}`}>
+                            <div
+                                className={`case ${propositionRefusee && ligneActive ? 'refusee' : (ligneActive ? '' : resultat)} ${classeAnimation}`}
+                                style={essai ? { '--delai-retournement': `${colonne * 140}ms` } : undefined}
+                                key={`${ligne}-${colonne}`}
+                            >
                                 {lettre}
                             </div>
                         );

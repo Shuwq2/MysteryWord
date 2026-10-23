@@ -4,6 +4,7 @@ import Jeu from './pages/jeu.jsx'
 import Accueil from './pages/Accueil'
 import PageStatistiques from './pages/Statistiques.jsx'
 import PageClassement from './pages/Classement.jsx'
+import Regles from './pages/Regles.jsx'
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <Route path="/jeu" element={<Jeu />} />
       <Route path="/statistiques" element={<PageStatistiques />} />
       <Route path="/classement" element={<PageClassement />} />
+        <Route path="/regles" element={<Regles />} />
     </Routes>
    </BrowserRouter>
   )

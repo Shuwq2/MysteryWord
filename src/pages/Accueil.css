@@ -195,3 +195,8 @@ form {
   color: #ffd27b;
   font-weight: 700;
 }
+
+.bouton-regles-accueil {
+  display: block;
+  margin: 1rem auto 0;
+}
