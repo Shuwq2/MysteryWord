@@ -1,4 +1,4 @@
-import logo from '../assets/logoMW.gif'
+import logo from '../assets/LogoMW.gif'
 import Playbutton from '../components/Playbutton'
 import Pseudoform from '../components/Pseudoform'
 import ClassementButton from '../components/ClassementButton'
