@@ -1,6 +1,8 @@
 import FinPartie from './FinPartie.jsx';
 import Clavier from './Clavier.jsx';
 import useWordle from '../hooks/useWordle.js';
+import { obtenirJourUniversel } from '../utils/wordle.js';
+import { useLocation } from 'react-router-dom';
 
 const NOMBRE_DE_LIGNES = 6;
 const LONGUEUR_DU_MOT = 5;
@@ -38,6 +40,10 @@ const MOTS_SECRETS = [
 ];
 
 export default function Grille() {
+    const location = useLocation();
+    const mode = new URLSearchParams(location.search).get('mode') === 'quotidienne'
+        ? 'quotidienne'
+        : 'libre';
     const {
         essais,
         motSecret,
@@ -53,10 +59,24 @@ export default function Grille() {
         saisirLettre,
         effacerLettre,
         validerProposition,
-    } = useWordle(MOTS_SECRETS, LONGUEUR_DU_MOT);
+        tempsRestant,
+    } = useWordle(MOTS_SECRETS, LONGUEUR_DU_MOT, mode);
+
+    function formaterTemps(duree) {
+        const totalSecondes = Math.max(0, Math.ceil(duree / 1000));
+        return `${Math.floor(totalSecondes / 3600)} h ${String(Math.floor((totalSecondes % 3600) / 60)).padStart(2, '0')} min ${String(totalSecondes % 60).padStart(2, '0')} s`;
+    }
 
     return (
         <form className="grille-form" onSubmit={validerProposition} onClick={activerSaisie}>
+            <div className="entete-partie">
+                <strong>{mode === 'quotidienne' ? 'Mot du jour' : 'Partie libre'}</strong>
+                {mode === 'quotidienne' && (
+                    <span role="timer" aria-live="polite">
+                        Prochain mot dans {formaterTemps(tempsRestant)}
+                    </span>
+                )}
+            </div>
             <input
                 ref={saisieRef}
                 className="saisie-grille"
@@ -113,6 +133,9 @@ export default function Grille() {
                     resultatPartie={resultatPartie}
                     motSecret={motSecret}
                     onRejouer={relancerPartie}
+                    essais={essais}
+                    mode={mode}
+                    jour={obtenirJourUniversel()}
                 />
             )}
         </form>

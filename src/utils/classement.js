@@ -22,26 +22,38 @@ export function recupererHistorique() {
     return historique.length > 0 ? historique : lireParties(CLE_CLASSEMENT);
 }
 
-export function recupererClassement() {
-    return recupererHistorique()
+export function recupererClassement(limite = true) {
+    const classement = recupererHistorique()
         .filter((partie) => partie && typeof partie === 'object')
         .map((partie) => ({
             pseudo: typeof partie.pseudo === 'string' ? partie.pseudo : 'Anonyme',
             mot: typeof partie.mot === 'string' ? partie.mot : '—',
             essais: Number.isInteger(partie.essais) ? partie.essais : '—',
             score: Number.isFinite(partie.score) ? partie.score : 0,
+            mode: partie.mode === 'quotidienne' ? 'quotidienne' : 'libre',
+            jour: typeof partie.jour === 'string' ? partie.jour : null,
+            temps: Number.isFinite(partie.temps) ? partie.temps : null,
             date: typeof partie.date === 'string' ? partie.date : null,
         }))
-        .sort((premier, second) => second.score - premier.score)
-        .slice(0, NOMBRE_MAX_DE_PARTIES);
+        .sort((premier, second) => second.score - premier.score);
+    return limite ? classement.slice(0, NOMBRE_MAX_DE_PARTIES) : classement;
 }
 
-export function enregistrerPartie(pseudo, mot, essais, score) {
+export function recupererClassementQuotidien(jour) {
+    return recupererClassement(false)
+        .filter((partie) => partie.mode === 'quotidienne' && partie.jour === jour)
+        .sort((premier, second) => second.score - premier.score || (premier.temps ?? Infinity) - (second.temps ?? Infinity));
+}
+
+export function enregistrerPartie(pseudo, mot, essais, score, options = {}) {
     const partie = {
         pseudo: pseudo.trim() || 'Anonyme',
         mot,
         essais,
         score,
+        mode: options.mode === 'quotidienne' ? 'quotidienne' : 'libre',
+        jour: options.jour ?? null,
+        temps: Number.isFinite(options.temps) ? options.temps : null,
         victoire: score > 0,
         date: new Date().toISOString(),
     };
