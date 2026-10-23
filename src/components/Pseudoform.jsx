@@ -13,6 +13,7 @@ export default function Pseudoform() {
         }
 
         localStorage.setItem('mysteryword-pseudo', pseudoNettoye)
+        window.dispatchEvent(new Event('pseudo-change'))
         setPseudo(pseudoNettoye)
         setPseudoApplique(pseudoNettoye)
     }

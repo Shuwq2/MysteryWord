@@ -1,6 +1,8 @@
 import logo from '../assets/logoMW.gif'
 import Playbutton from '../components/Playbutton'
 import Pseudoform from '../components/Pseudoform'
+import ClassementButton from '../components/ClassementButton'
+import StatistiquesButton from '../components/StatistiquesButton'
 import Classement from '../components/Classement'
 import { useNavigate } from 'react-router-dom'
 
@@ -13,6 +15,10 @@ export default function Accueil() {
       <h1>Ce jeu consiste à trouver un mot mystère français en 5 tentatives</h1>
       <Pseudoform />
       <Playbutton />
+      <div className="liens-statistiques">
+        <ClassementButton />
+        <StatistiquesButton />
+      </div>
       <button
         className="bouton-regles-accueil"
         type="button"
