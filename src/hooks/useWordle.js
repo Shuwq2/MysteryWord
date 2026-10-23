@@ -16,6 +16,7 @@ export default function useWordle(motsSecrets, longueurDuMot) {
     const [propositionRefusee, setPropositionRefusee] = useState(null);
     const [avertissementApi, setAvertissementApi] = useState('');
     const saisieRef = useRef(null);
+    const scoreEnregistre = useRef(false);
 
     useEffect(() => {
         function reprendreSaisie() {
@@ -35,13 +36,14 @@ export default function useWordle(motsSecrets, longueurDuMot) {
     }, [essais.length, resultatPartie, verificationEnCours]);
 
     useEffect(() => {
-        if (!resultatPartie) {
+        if (!resultatPartie || scoreEnregistre.current) {
             return;
         }
 
         const pseudo = localStorage.getItem('mysteryword-pseudo') || '';
-        enregistrerScore(pseudo, resultatPartie.score);
-    }, [resultatPartie]);
+        enregistrerScore(pseudo, motSecret, essais.length, resultatPartie.score);
+        scoreEnregistre.current = true;
+    }, [essais.length, motSecret, resultatPartie]);
 
     function activerSaisie() {
         if (!resultatPartie && !verificationEnCours) {
@@ -149,6 +151,7 @@ export default function useWordle(motsSecrets, longueurDuMot) {
         setVerificationEnCours(false);
         setPropositionRefusee(null);
         setAvertissementApi('');
+        scoreEnregistre.current = false;
     }
 
     async function verifierMot(mot) {
