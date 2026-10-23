@@ -11,9 +11,12 @@ export default function Accueil() {
   return (
     <>
       <img src={logo} alt="Logo Mystery Word" />
-      <h1>Ce jeu consiste à trouver un mot mystère français en 5 tentatives</h1>
+      <h1>Retrouvez le mot mystère français en six essais maximum</h1>
       <Pseudoform />
-      <Playbutton />
+      <div className="choix-modes">
+        <Playbutton mode="quotidienne">Mot du jour</Playbutton>
+        <Playbutton mode="libre">Partie libre</Playbutton>
+      </div>
       <div className="liens-statistiques">
         <ClassementButton />
         <StatistiquesButton />

@@ -2,6 +2,23 @@ export function tirerMotSecret(mots) {
     return mots[Math.floor(Math.random() * mots.length)].toUpperCase();
 }
 
+export function obtenirJourUniversel(date = new Date()) {
+    return date.toISOString().slice(0, 10);
+}
+
+export function tirerMotDuJour(mots, jour = obtenirJourUniversel()) {
+    const index = [...jour].reduce((total, caractere) => (
+        (total * 31 + caractere.charCodeAt(0)) % mots.length
+    ), 0);
+    return mots[index].toUpperCase();
+}
+
+export function millisecondesAvantMinuit(date = new Date()) {
+    const prochainJour = new Date(date);
+    prochainJour.setUTCHours(24, 0, 0, 0);
+    return Math.max(0, prochainJour.getTime() - date.getTime());
+}
+
 export function normaliserMot(mot) {
     return mot.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 }
