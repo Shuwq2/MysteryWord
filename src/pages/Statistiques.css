@@ -1,0 +1,121 @@
+.page-statistiques {
+    width: 100%;
+}
+
+.page-classement {
+    width: 100%;
+}
+
+.page-classement .classement {
+    width: min(100%, 520px);
+    margin: 0 auto;
+}
+
+.page-classement > button {
+    margin-top: 1.5rem;
+}
+
+.page-statistiques .statistiques {
+    width: min(100%, 520px);
+    margin: 0 auto;
+}
+
+.liens-statistiques {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+@media (max-width: 480px) {
+    .liens-statistiques {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+.page-statistiques > button {
+    margin-top: 1.5rem;
+}
+
+.statistiques {
+    width: min(100%, 520px);
+    margin: 2rem auto 0;
+    padding: 1rem;
+    border: 1px solid rgba(228, 160, 78, 0.55);
+    border-radius: 12px;
+    background: rgba(42, 16, 8, 0.7);
+}
+
+.statistiques h2,
+.statistiques h3 {
+    margin: 0 0 1rem;
+    color: #ffd27b;
+}
+
+.statistiques h3 {
+    margin-top: 1.25rem;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+
+.resume-statistiques {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem;
+}
+
+.resume-statistiques p {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0;
+}
+
+.resume-statistiques strong {
+    color: #ffd27b;
+    font-size: 1.25rem;
+}
+
+.resume-statistiques span {
+    color: #d9b477;
+    font-size: 0.7rem;
+}
+
+.repartition-victoires {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.ligne-repartition {
+    display: grid;
+    grid-template-columns: 1.5rem 1fr;
+    align-items: center;
+    gap: 0.5rem;
+    text-align: left;
+}
+
+.barre-repartition {
+    height: 1.35rem;
+    background: rgba(248, 237, 218, 0.12);
+}
+
+.remplissage-repartition {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-width: 0;
+    height: 100%;
+    padding-right: 0.4rem;
+    box-sizing: border-box;
+    background: #bf7a35;
+    color: #fff5df;
+    font-size: 0.75rem;
+}
+
+@media (max-width: 480px) {
+    .resume-statistiques {
+        grid-template-columns: repeat(3, 1fr);
+        row-gap: 0.75rem;
+    }
+}

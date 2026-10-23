@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { normaliserMot, tirerMotSecret, verifierProposition } from '../utils/wordle.js';
-import { enregistrerScore } from '../utils/classement.js';
+import { enregistrerPartie } from '../utils/classement.js';
 
 const NOMBRE_DE_LIGNES = 6;
 const POINTS_PAR_ESSAI = [600, 500, 400, 300, 200, 100];
@@ -41,7 +41,7 @@ export default function useWordle(motsSecrets, longueurDuMot) {
         }
 
         const pseudo = localStorage.getItem('mysteryword-pseudo') || '';
-        enregistrerScore(pseudo, motSecret, essais.length, resultatPartie.score);
+        enregistrerPartie(pseudo, motSecret, essais.length, resultatPartie.score);
         scoreEnregistre.current = true;
     }, [essais.length, motSecret, resultatPartie]);
 

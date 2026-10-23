@@ -1,7 +1,8 @@
 import logo from '../assets/logoMW.gif'
 import Playbutton from '../components/Playbutton'
 import Pseudoform from '../components/Pseudoform'
-import Classement from '../components/Classement'
+import ClassementButton from '../components/ClassementButton'
+import StatistiquesButton from '../components/StatistiquesButton'
 
 export default function Accueil() {
   return (
@@ -10,7 +11,10 @@ export default function Accueil() {
       <h1>Ce jeu consiste à trouver un mot mystère français en 5 tentatives</h1>
       <Pseudoform />
       <Playbutton />
-      <Classement />
+      <div className="liens-statistiques">
+        <ClassementButton />
+        <StatistiquesButton />
+      </div>
     </>
   );
 }
