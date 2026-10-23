@@ -3,7 +3,6 @@ import Playbutton from '../components/Playbutton'
 import Pseudoform from '../components/Pseudoform'
 import ClassementButton from '../components/ClassementButton'
 import StatistiquesButton from '../components/StatistiquesButton'
-import Classement from '../components/Classement'
 import { useNavigate } from 'react-router-dom'
 
 export default function Accueil() {
@@ -26,7 +25,6 @@ export default function Accueil() {
       >
         Voir les règles
       </button>
-      <Classement />
     </>
   );
 }
