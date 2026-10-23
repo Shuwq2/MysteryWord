@@ -96,6 +96,41 @@ export default function useWordle(motsSecrets, longueurDuMot) {
         setProposition(mot.split('').concat(Array(longueurDuMot).fill('')).slice(0, longueurDuMot));
     }
 
+    function saisirLettre(lettre) {
+        if (resultatPartie || verificationEnCours || proposition.every(Boolean)) {
+            return;
+        }
+
+        setPropositionRefusee(null);
+        setProposition((ancienneProposition) => {
+            const indexLibre = ancienneProposition.findIndex((caractere) => !caractere);
+            if (indexLibre === -1) {
+                return ancienneProposition;
+            }
+
+            const nouvelleProposition = [...ancienneProposition];
+            nouvelleProposition[indexLibre] = lettre;
+            return nouvelleProposition;
+        });
+    }
+
+    function effacerLettre() {
+        if (resultatPartie || verificationEnCours) {
+            return;
+        }
+
+        setProposition((ancienneProposition) => {
+            const indexDerniereLettre = ancienneProposition.findLastIndex(Boolean);
+            if (indexDerniereLettre === -1) {
+                return ancienneProposition;
+            }
+
+            const nouvelleProposition = [...ancienneProposition];
+            nouvelleProposition[indexDerniereLettre] = '';
+            return nouvelleProposition;
+        });
+    }
+
     function relancerPartie() {
         setMotSecret(tirerMotSecret(motsSecrets));
         setProposition(Array(longueurDuMot).fill(''));
@@ -158,6 +193,8 @@ export default function useWordle(motsSecrets, longueurDuMot) {
         activerSaisie,
         relancerPartie,
         saisirProposition,
+        saisirLettre,
+        effacerLettre,
         validerProposition,
     };
 }

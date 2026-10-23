@@ -67,6 +67,82 @@
     pointer-events: none;
 }
 
+.clavier {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    width: min(90vw, 360px);
+}
+
+.ligne-clavier {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    width: 100%;
+}
+
+.touche,
+.ligne-clavier > button {
+    min-width: 28px;
+    min-height: 36px;
+    padding: 4px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background-color: #e5e7eb;
+    background-image: none;
+    box-shadow: none;
+    color: #1f2937;
+    cursor: pointer;
+    font: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: normal;
+    text-transform: none;
+    transition: none;
+}
+
+.ligne-clavier > button {
+    padding: 4px 12px;
+}
+
+.touche.vert {
+    border-color: #16a34a;
+    background-color: #22c55e;
+    color: white;
+}
+
+.touche.jaune {
+    border-color: #ca8a04;
+    background-color: #facc15;
+    color: #422006;
+}
+
+.touche.gris {
+    border-color: #4b5563;
+    background-color: #6b7280;
+    color: white;
+}
+
+.touche:disabled,
+.ligne-clavier > button:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.touche:hover,
+.ligne-clavier > button:hover {
+    filter: none;
+    transform: none;
+    box-shadow: none;
+}
+
+.touche:active,
+.ligne-clavier > button:active {
+    transform: none;
+    box-shadow: none;
+}
+
 .case {
     width: 100%;
     padding: 0;

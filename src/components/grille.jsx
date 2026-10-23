@@ -1,4 +1,5 @@
 import FinPartie from './FinPartie.jsx';
+import Clavier from './Clavier.jsx';
 import useWordle from '../hooks/useWordle.js';
 
 const NOMBRE_DE_LIGNES = 6;
@@ -49,6 +50,8 @@ export default function Grille() {
         activerSaisie,
         relancerPartie,
         saisirProposition,
+        saisirLettre,
+        effacerLettre,
         validerProposition,
     } = useWordle(MOTS_SECRETS, LONGUEUR_DU_MOT);
 
@@ -92,6 +95,12 @@ export default function Grille() {
                     }),
                 )}
             </div>
+            <Clavier
+                essais={essais}
+                saisirLettre={saisirLettre}
+                effacerLettre={effacerLettre}
+                desactive={verificationEnCours || Boolean(resultatPartie)}
+            />
             {resultatPartie && (
                 <FinPartie
                     resultatPartie={resultatPartie}
