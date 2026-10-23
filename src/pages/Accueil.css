@@ -106,9 +106,9 @@ form {
 }
 
 .classement {
-  width: min(100%, 380px);
+  width: min(100%, 520px);
   margin: 2rem auto 0;
-  padding: 1rem;
+  padding: 0.85rem;
   color: #f8edda;
   border: 1px solid rgba(228, 160, 78, 0.55);
   border-radius: 12px;
@@ -116,7 +116,7 @@ form {
 }
 
 .classement h2 {
-  margin: 0 0 1rem;
+  margin: 0 0 0.75rem;
   color: #ffd27b;
 }
 
@@ -126,21 +126,24 @@ form {
 }
 
 .tableau-classement {
-  overflow-x: auto;
+  width: 100%;
 }
 
 .tableau-classement table {
   width: 100%;
-  min-width: 560px;
+  table-layout: fixed;
   border-collapse: collapse;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
 }
 
 .tableau-classement th,
 .tableau-classement td {
-  padding: 0.5rem 0.35rem;
+  padding: 0.4rem 0.25rem;
   border-bottom: 1px solid rgba(228, 160, 78, 0.25);
   text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tableau-classement th {
@@ -156,6 +159,36 @@ form {
 .tableau-classement td:nth-child(4),
 .tableau-classement td:nth-child(5) {
   text-align: center;
+}
+
+.tableau-classement th:nth-child(1),
+.tableau-classement td:nth-child(1) {
+  width: 7%;
+}
+
+.tableau-classement th:nth-child(2),
+.tableau-classement td:nth-child(2) {
+  width: 23%;
+}
+
+.tableau-classement th:nth-child(3),
+.tableau-classement td:nth-child(3) {
+  width: 14%;
+}
+
+.tableau-classement th:nth-child(4),
+.tableau-classement td:nth-child(4) {
+  width: 13%;
+}
+
+.tableau-classement th:nth-child(5),
+.tableau-classement td:nth-child(5) {
+  width: 17%;
+}
+
+.tableau-classement th:nth-child(6),
+.tableau-classement td:nth-child(6) {
+  width: 26%;
 }
 
 .tableau-classement td:nth-child(5) {

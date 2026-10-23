@@ -16,7 +16,6 @@ export default function Classement() {
 
         return new Intl.DateTimeFormat('fr-FR', {
             dateStyle: 'short',
-            timeStyle: 'short',
         }).format(dateFormatee);
     }
 
