@@ -125,21 +125,40 @@ form {
   color: #d9b477;
 }
 
-.classement ol {
-  margin: 0;
-  padding-left: 1.5rem;
+.tableau-classement {
+  overflow-x: auto;
+}
+
+.tableau-classement table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.tableau-classement th,
+.tableau-classement td {
+  padding: 0.5rem 0.35rem;
+  border-bottom: 1px solid rgba(228, 160, 78, 0.25);
   text-align: left;
 }
 
-.classement li {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.45rem 0;
+.tableau-classement th {
+  color: #d9b477;
+  font-weight: 600;
+}
+
+.tableau-classement td {
   color: #f8edda;
 }
 
-.classement li strong {
+.tableau-classement td:nth-child(1),
+.tableau-classement td:nth-child(4),
+.tableau-classement td:nth-child(5) {
+  text-align: center;
+}
+
+.tableau-classement td:nth-child(5) {
   color: #ffd27b;
-  white-space: nowrap;
+  font-weight: 700;
 }
