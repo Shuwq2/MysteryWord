@@ -8,10 +8,18 @@
 
 .grille {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(6, 1fr);
+    grid-template-columns: repeat(var(--nombre-colonnes), minmax(0, 1fr));
+    grid-template-rows: repeat(var(--nombre-lignes), 1fr);
     gap: 8px;
     width: min(90vw, 360px);
+}
+
+.grille-6 {
+    width: min(90vw, 420px);
+}
+
+.grille-7 {
+    width: min(90vw, 490px);
 }
 
 .case {
@@ -63,8 +71,9 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    color: #1f2937;
+    color: #ffd27b;
     text-align: center;
+    text-shadow: 0 2px 18px rgba(232, 143, 45, 0.2);
 }
 
 .entete-partie strong {
@@ -72,7 +81,7 @@
 }
 
 .entete-partie span {
-    color: #475569;
+    color: #d9b477;
     font-size: 0.9rem;
 }
 

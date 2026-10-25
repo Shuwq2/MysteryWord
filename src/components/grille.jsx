@@ -57,7 +57,13 @@ export default function Grille() {
                 </p>
             )}
             {avertissementApi && <p className="message-avertissement" role="status">{avertissementApi}</p>}
-            <div className="grille">
+            <div
+                className={`grille grille-${longueurDuMot}`}
+                style={{
+                    '--nombre-colonnes': longueurDuMot,
+                    '--nombre-lignes': nombreDeLignes,
+                }}
+            >
                 {Array.from({ length: nombreDeLignes }, (_, ligne) =>
                     Array.from({ length: longueurDuMot }, (_, colonne) => {
                         const essai = essais[ligne];
