@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { lireReglages } from '../utils/difficultes.js';
 
-export default function Playbutton() {
+export default function Playbutton({ mode = 'libre', children }) {
   const navigate = useNavigate();
 
   return (

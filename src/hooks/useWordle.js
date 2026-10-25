@@ -20,13 +20,41 @@ export default function useWordle(motsSecrets, longueurDuMot, mode = 'libre') {
         * (mode === 'difficile' ? 1.5 : 1);
     const [motSecret, setMotSecret] = useState(() => tirerMotSecret(motsSecrets));
     const [proposition, setProposition] = useState(() => Array(longueurDuMot).fill(''));
-    const [essais, setEssais] = useState([]);
-    const [resultatPartie, setResultatPartie] = useState(null);
+    const [essais, setEssais] = useState(() => partieSauvegardee?.essais ?? []);
+    const [resultatPartie, setResultatPartie] = useState(() => partieSauvegardee?.resultatPartie ?? null);
     const [verificationEnCours, setVerificationEnCours] = useState(false);
     const [propositionRefusee, setPropositionRefusee] = useState(null);
     const [avertissementApi, setAvertissementApi] = useState('');
     const saisieRef = useRef(null);
     const scoreEnregistre = useRef(false);
+    const [debutInitial] = useState(() => Date.now());
+    const debutPartie = useRef(partieSauvegardee?.debut ?? debutInitial);
+    const [tempsEcoule, setTempsEcoule] = useState(() => partieSauvegardee?.tempsEcoule ?? 0);
+
+    useEffect(() => {
+        if (mode !== 'quotidienne' || resultatPartie) {
+            return undefined;
+        }
+        const intervalle = window.setInterval(() => {
+            setTempsEcoule(Math.floor((Date.now() - debutPartie.current) / 1000));
+            if (obtenirJourUniversel() !== jour) {
+                window.location.reload();
+            }
+        }, 1000);
+        return () => window.clearInterval(intervalle);
+    }, [jour, mode, resultatPartie]);
+
+    useEffect(() => {
+        if (mode === 'quotidienne') {
+            localStorage.setItem(CLE_PARTIE_QUOTIDIENNE, JSON.stringify({
+                jour,
+                essais,
+                resultatPartie,
+                debut: debutPartie.current,
+                tempsEcoule,
+            }));
+        }
+    }, [essais, jour, mode, resultatPartie, tempsEcoule]);
 
     useEffect(() => {
         function reprendreSaisie() {
@@ -169,6 +197,9 @@ export default function useWordle(motsSecrets, longueurDuMot, mode = 'libre') {
     }
 
     function relancerPartie() {
+        if (mode === 'quotidienne') {
+            return;
+        }
         setMotSecret(tirerMotSecret(motsSecrets));
         setProposition(Array(longueurDuMot).fill(''));
         setEssais([]);
@@ -177,6 +208,8 @@ export default function useWordle(motsSecrets, longueurDuMot, mode = 'libre') {
         setPropositionRefusee(null);
         setAvertissementApi('');
         scoreEnregistre.current = false;
+        debutPartie.current = Date.now();
+        setTempsEcoule(0);
     }
 
     async function verifierMot(mot) {
@@ -234,5 +267,8 @@ export default function useWordle(motsSecrets, longueurDuMot, mode = 'libre') {
         saisirLettre,
         effacerLettre,
         validerProposition,
+        mode,
+        tempsEcoule,
+        tempsRestant: millisecondesAvantMinuit(),
     };
 }
