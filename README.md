@@ -2,6 +2,12 @@
 
 Les propositions sont vérifiées auprès de l’API du Wiktionnaire français avant d’être colorées. Une proposition absente d’une entrée française est refusée et ne consomme pas d’essai. La vérification est désactivée pendant la requête afin d’éviter les doubles validations.
 
+## Listes de mots
+
+La partie libre propose des mots solutions de 5, 6 ou 7 lettres. Ces listes ont été constituées manuellement à partir de vocabulaire français courant, puis relues pour vérifier la longueur et l'absence de doublons. Elles sont volontairement embarquées dans `src/utils/difficultes.js` afin que le jeu reste disponible sans téléchargement d'une base externe. Les propositions du joueur continuent d'être contrôlées par le Wiktionnaire.
+
+La longueur choisie et le mode difficile sont conservés dans le navigateur. La longueur est également intégrée à l'URL de la partie, par exemple `/jeu/6?mode=difficile`.
+
 Si l’API est indisponible ou dépasse cinq secondes, l’essai est accepté
 exceptionnellement et un avertissement est affiché. Ce choix évite de bloquer
 la partie tout en informant clairement le joueur que la vérification n’a pas pu être réalisée. En fin de partie, le mot secret accentué est lié à sa page du Wiktionnaire.

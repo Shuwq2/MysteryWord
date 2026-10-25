@@ -1,5 +1,5 @@
 import logo from '../assets/LogoMW.gif'
-import Playbutton from '../components/Playbutton'
+import DifficulteForm from '../components/DifficulteForm'
 import Pseudoform from '../components/Pseudoform'
 import ClassementButton from '../components/ClassementButton'
 import StatistiquesButton from '../components/StatistiquesButton'
@@ -13,7 +13,7 @@ export default function Accueil() {
       <img src={logo} alt="Logo Mystery Word" />
       <h1>Ce jeu consiste à trouver un mot mystère français en 5 tentatives</h1>
       <Pseudoform />
-      <Playbutton />
+      <DifficulteForm />
       <div className="liens-statistiques">
         <ClassementButton />
         <StatistiquesButton />

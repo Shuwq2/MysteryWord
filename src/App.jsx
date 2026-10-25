@@ -12,6 +12,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Accueil />} />
       <Route path="/jeu" element={<Jeu />} />
+      <Route path="/jeu/:longueur" element={<Jeu />} />
       <Route path="/statistiques" element={<PageStatistiques />} />
       <Route path="/classement" element={<PageClassement />} />
         <Route path="/regles" element={<Regles />} />

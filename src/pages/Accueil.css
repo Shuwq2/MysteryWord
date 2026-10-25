@@ -200,3 +200,56 @@ form {
   display: block;
   margin: 1rem auto 0;
 }
+
+.form-difficulte {
+  width: min(100%, 420px);
+  margin: 1.5rem auto 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.form-difficulte label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: #f8edda;
+}
+
+.form-difficulte select {
+  padding: 0.55rem 0.7rem;
+  border: 1px solid #d99742;
+  border-radius: 6px;
+  color: #321105;
+  background: #ffe09a;
+}
+
+.form-difficulte .choix-difficile {
+  justify-content: center;
+}
+
+.form-difficulte .choix-difficile input {
+  accent-color: #dc842c;
+}
+
+.filtres-classement {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.filtres-classement label {
+  display: grid;
+  gap: 0.25rem;
+  color: #d9b477;
+  font-size: 0.8rem;
+}
+
+.filtres-classement select {
+  padding: 0.3rem;
+  border: 1px solid rgba(228, 160, 78, 0.55);
+  border-radius: 5px;
+  color: #321105;
+  background: #ffe09a;
+}

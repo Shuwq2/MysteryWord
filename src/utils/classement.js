@@ -22,27 +22,38 @@ export function recupererHistorique() {
     return historique.length > 0 ? historique : lireParties(CLE_CLASSEMENT);
 }
 
-export function recupererClassement() {
-    return recupererHistorique()
-        .filter((partie) => partie && typeof partie === 'object')
-        .map((partie) => ({
-            pseudo: typeof partie.pseudo === 'string' ? partie.pseudo : 'Anonyme',
-            mot: typeof partie.mot === 'string' ? partie.mot : '—',
-            essais: Number.isInteger(partie.essais) ? partie.essais : '—',
-            score: Number.isFinite(partie.score) ? partie.score : 0,
-            date: typeof partie.date === 'string' ? partie.date : null,
-        }))
-        .sort((premier, second) => second.score - premier.score)
-        .slice(0, NOMBRE_MAX_DE_PARTIES);
+function normaliserPartie(partie) {
+    return {
+        pseudo: typeof partie.pseudo === 'string' ? partie.pseudo : 'Anonyme',
+        mot: typeof partie.mot === 'string' ? partie.mot : '—',
+        essais: Number.isInteger(partie.essais) ? partie.essais : '—',
+        score: Number.isFinite(partie.score) ? partie.score : 0,
+        date: typeof partie.date === 'string' ? partie.date : null,
+        longueur: Number.isInteger(partie.longueur) ? partie.longueur : 5,
+        mode: partie.mode === 'difficile' ? 'difficile' : 'libre',
+    };
 }
 
-export function enregistrerPartie(pseudo, mot, essais, score) {
+export function recupererToutesLesParties() {
+    return recupererHistorique()
+        .filter((partie) => partie && typeof partie === 'object')
+        .map(normaliserPartie)
+        .sort((premier, second) => second.score - premier.score)
+}
+
+export function recupererClassement() {
+    return recupererToutesLesParties().slice(0, NOMBRE_MAX_DE_PARTIES);
+}
+
+export function enregistrerPartie(pseudo, mot, essais, score, longueur = mot.length, mode = 'libre') {
     const partie = {
         pseudo: pseudo.trim() || 'Anonyme',
         mot,
         essais,
         score,
         victoire: score > 0,
+        longueur,
+        mode,
         date: new Date().toISOString(),
     };
 

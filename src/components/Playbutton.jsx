@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { lireReglages } from '../utils/difficultes.js';
 
 export default function Playbutton() {
   const navigate = useNavigate();
@@ -6,6 +7,9 @@ export default function Playbutton() {
   return (
     <button 
     type="button"
-    onClick={() => navigate('/jeu')}>Lancer la partie</button>
+    onClick={() => {
+      const reglages = lireReglages();
+      navigate(`/jeu/${reglages.longueur}?mode=${reglages.mode}`);
+    }}>Lancer la partie</button>
   )
 }

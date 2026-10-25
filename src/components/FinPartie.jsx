@@ -1,13 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 
-export default function FinPartie({ resultatPartie, motSecret, onRejouer }) {
+export default function FinPartie({ resultatPartie, motSecret, onRejouer, longueur, mode }) {
     const navigate = useNavigate();
 
     return (
         <>
             <p className="message-fin" role="status">
                 {resultatPartie.statut === 'victoire'
-                    ? `Victoire ! Score : ${resultatPartie.score} points.`
+                    ? `Victoire ! Score : ${resultatPartie.score} points (${longueur} lettres, ${mode === 'difficile' ? 'mode difficile' : 'partie libre'}).`
                     : <>Défaite ! Le mot était <strong>{motSecret}</strong>. Score : 0 point.</>}
             </p>
             <a
