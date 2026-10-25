@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import {
     normaliserMot,
+    obtenirJourUniversel,
+    tirerMotDuJour,
     tirerMotSecret,
     verifierModeDifficile,
     verifierProposition,
@@ -18,15 +20,44 @@ export default function useWordle(motsSecrets, longueurDuMot, mode = 'libre') {
     );
     const multiplicateur = (longueurDuMot === 6 ? 1.5 : longueurDuMot === 7 ? 2 : 1)
         * (mode === 'difficile' ? 1.5 : 1);
-    const [motSecret, setMotSecret] = useState(() => tirerMotSecret(motsSecrets));
+    const jour = obtenirJourUniversel();
+    const clePartie = `mysteryword-partie-quotidienne-${jour}`;
+    const partieSauvegardee = mode === 'quotidienne'
+        ? lirePartieSauvegardee(clePartie)
+        : null;
+    const [motSecret, setMotSecret] = useState(() => (
+        mode === 'quotidienne' ? tirerMotDuJour(motsSecrets, jour) : tirerMotSecret(motsSecrets)
+    ));
     const [proposition, setProposition] = useState(() => Array(longueurDuMot).fill(''));
-    const [essais, setEssais] = useState([]);
-    const [resultatPartie, setResultatPartie] = useState(null);
+    const [essais, setEssais] = useState(() => partieSauvegardee?.essais ?? []);
+    const [resultatPartie, setResultatPartie] = useState(() => partieSauvegardee?.resultatPartie ?? null);
     const [verificationEnCours, setVerificationEnCours] = useState(false);
     const [propositionRefusee, setPropositionRefusee] = useState(null);
     const [avertissementApi, setAvertissementApi] = useState('');
     const saisieRef = useRef(null);
     const scoreEnregistre = useRef(false);
+    const [debutPartie] = useState(() => partieSauvegardee?.debut ?? Date.now());
+    const [tempsEcoule, setTempsEcoule] = useState(0);
+
+    useEffect(() => {
+        if (mode !== 'quotidienne' || resultatPartie) {
+            return undefined;
+        }
+        const intervalle = window.setInterval(() => {
+            setTempsEcoule(Math.floor((Date.now() - debutPartie) / 1000));
+        }, 1000);
+        return () => window.clearInterval(intervalle);
+    }, [debutPartie, mode, resultatPartie]);
+
+    useEffect(() => {
+        if (mode === 'quotidienne') {
+            localStorage.setItem(clePartie, JSON.stringify({
+                essais,
+                resultatPartie,
+                debut: debutPartie,
+            }));
+        }
+    }, [clePartie, debutPartie, essais, mode, resultatPartie]);
 
     useEffect(() => {
         function reprendreSaisie() {
@@ -58,9 +89,10 @@ export default function useWordle(motsSecrets, longueurDuMot, mode = 'libre') {
             resultatPartie.score,
             longueurDuMot,
             mode,
+            { jour: mode === 'quotidienne' ? jour : null, temps: mode === 'quotidienne' ? tempsEcoule : null },
         );
         scoreEnregistre.current = true;
-    }, [essais.length, longueurDuMot, mode, motSecret, resultatPartie]);
+    }, [essais.length, jour, longueurDuMot, mode, motSecret, resultatPartie, tempsEcoule]);
 
     function activerSaisie() {
         if (!resultatPartie && !verificationEnCours) {
@@ -238,5 +270,15 @@ export default function useWordle(motsSecrets, longueurDuMot, mode = 'libre') {
         effacerLettre,
         validerProposition,
         mode,
+        tempsEcoule,
     };
+}
+
+function lirePartieSauvegardee(cle) {
+    try {
+        const partie = JSON.parse(localStorage.getItem(cle) || 'null');
+        return partie && typeof partie === 'object' ? partie : null;
+    } catch {
+        return null;
+    }
 }

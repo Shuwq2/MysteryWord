@@ -33,7 +33,11 @@ export default function Grille() {
     return (
         <form className="grille-form" onSubmit={validerProposition} onClick={activerSaisie}>
             <div className="entete-partie">
-                <strong>{configuration.mode === 'difficile' ? 'Mode difficile' : 'Partie libre'}</strong>
+                <strong>
+                    {configuration.mode === 'quotidienne'
+                        ? `Mot du jour (${new Date().toLocaleDateString('fr-FR')})`
+                        : configuration.mode === 'difficile' ? 'Mode difficile' : 'Partie libre'}
+                </strong>
             </div>
             <input
                 ref={saisieRef}

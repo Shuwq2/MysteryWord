@@ -30,7 +30,9 @@ function normaliserPartie(partie) {
         score: Number.isFinite(partie.score) ? partie.score : 0,
         date: typeof partie.date === 'string' ? partie.date : null,
         longueur: Number.isInteger(partie.longueur) ? partie.longueur : 5,
-        mode: partie.mode === 'difficile' ? 'difficile' : 'libre',
+        mode: partie.mode === 'quotidienne' || partie.mode === 'difficile' ? partie.mode : 'libre',
+        jour: typeof partie.jour === 'string' ? partie.jour : null,
+        temps: Number.isFinite(partie.temps) ? partie.temps : null,
     };
 }
 
@@ -45,7 +47,7 @@ export function recupererClassement() {
     return recupererToutesLesParties().slice(0, NOMBRE_MAX_DE_PARTIES);
 }
 
-export function enregistrerPartie(pseudo, mot, essais, score, longueur = mot.length, mode = 'libre') {
+export function enregistrerPartie(pseudo, mot, essais, score, longueur = mot.length, mode = 'libre', options = {}) {
     const partie = {
         pseudo: pseudo.trim() || 'Anonyme',
         mot,
@@ -54,6 +56,8 @@ export function enregistrerPartie(pseudo, mot, essais, score, longueur = mot.len
         victoire: score > 0,
         longueur,
         mode,
+        jour: options.jour ?? null,
+        temps: Number.isFinite(options.temps) ? options.temps : null,
         date: new Date().toISOString(),
     };
 

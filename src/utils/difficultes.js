@@ -70,6 +70,6 @@ export function normaliserConfiguration(longueur, mode) {
         : LONGUEUR_PAR_DEFAUT;
     return {
         longueur: longueurValidee,
-        mode: mode === 'difficile' ? 'difficile' : MODE_PAR_DEFAUT,
+        mode: mode === 'quotidienne' || mode === 'difficile' ? mode : MODE_PAR_DEFAUT,
     };
 }

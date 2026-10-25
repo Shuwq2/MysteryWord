@@ -15,7 +15,10 @@ export default function Accueil() {
       <h1>Retrouvez le mot mystère français en six essais maximum</h1>
       <Pseudoform />
       <DifficulteForm />
-      <Playbutton />
+      <div className="choix-modes">
+        <Playbutton mode="quotidienne">Mot du jour</Playbutton>
+        <Playbutton>Partie libre</Playbutton>
+      </div>
       <div className="liens-statistiques">
         <ClassementButton />
         <StatistiquesButton />
