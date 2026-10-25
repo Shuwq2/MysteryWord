@@ -1,13 +1,10 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import {
     enregistrerReglages,
     lireReglages,
     LONGUEURS_DISPONIBLES,
 } from '../utils/difficultes.js';
-
 export default function DifficulteForm() {
-    const navigate = useNavigate();
     const [reglages, setReglages] = useState(lireReglages);
 
     function modifierReglage(event) {
@@ -21,13 +18,8 @@ export default function DifficulteForm() {
         enregistrerReglages(prochainReglage);
     }
 
-    function lancerPartie(event) {
-        event.preventDefault();
-        navigate(`/jeu/${reglages.longueur}?mode=${reglages.mode}`);
-    }
-
     return (
-        <form className="form-difficulte" onSubmit={lancerPartie}>
+        <form className="form-difficulte">
             <label>
                 Longueur du mot
                 <select name="longueur" value={reglages.longueur} onChange={modifierReglage}>
@@ -45,7 +37,6 @@ export default function DifficulteForm() {
                 />
                 Mode difficile
             </label>
-            <button type="submit">Lancer la partie</button>
         </form>
     );
 }

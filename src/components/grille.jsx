@@ -33,12 +33,7 @@ export default function Grille() {
     return (
         <form className="grille-form" onSubmit={validerProposition} onClick={activerSaisie}>
             <div className="entete-partie">
-                <strong>{mode === 'quotidienne' ? 'Mot du jour' : 'Partie libre'}</strong>
-                {mode === 'quotidienne' && (
-                    <span role="timer" aria-live="polite">
-                        Prochain mot dans {formaterTemps(tempsRestant)}
-                    </span>
-                )}
+                <strong>{configuration.mode === 'difficile' ? 'Mode difficile' : 'Partie libre'}</strong>
             </div>
             <input
                 ref={saisieRef}
@@ -103,8 +98,6 @@ export default function Grille() {
                     mode={configuration.mode}
                     onRejouer={relancerPartie}
                     essais={essais}
-                    mode={mode}
-                    jour={obtenirJourUniversel()}
                 />
             )}
         </form>

@@ -1,5 +1,6 @@
 import logo from '../assets/LogoMW.gif'
 import DifficulteForm from '../components/DifficulteForm'
+import Playbutton from '../components/Playbutton'
 import Pseudoform from '../components/Pseudoform'
 import ClassementButton from '../components/ClassementButton'
 import StatistiquesButton from '../components/StatistiquesButton'
@@ -14,6 +15,7 @@ export default function Accueil() {
       <h1>Retrouvez le mot mystère français en six essais maximum</h1>
       <Pseudoform />
       <DifficulteForm />
+      <Playbutton />
       <div className="liens-statistiques">
         <ClassementButton />
         <StatistiquesButton />
