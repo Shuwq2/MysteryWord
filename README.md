@@ -63,7 +63,7 @@ suivantes :
 
 ### Déploiement et qualité
 
-- L'application est déployée sur Vercel à partir du dépôt Git.
+- L'application est déployée sur Vercel (ce n'est pas la dernière version) à partir du dépôt Git.
 - Chaque envoi sur la branche principale déclenche automatiquement une nouvelle
   mise en ligne.
 - Toutes les adresses de l'application fonctionnent en ligne, y compris après
