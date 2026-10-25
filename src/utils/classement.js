@@ -22,30 +22,30 @@ export function recupererHistorique() {
     return historique.length > 0 ? historique : lireParties(CLE_CLASSEMENT);
 }
 
-export function recupererClassement(limite = true) {
-    const classement = recupererHistorique()
+function normaliserPartie(partie) {
+    return {
+        pseudo: typeof partie.pseudo === 'string' ? partie.pseudo : 'Anonyme',
+        mot: typeof partie.mot === 'string' ? partie.mot : '—',
+        essais: Number.isInteger(partie.essais) ? partie.essais : '—',
+        score: Number.isFinite(partie.score) ? partie.score : 0,
+        date: typeof partie.date === 'string' ? partie.date : null,
+        longueur: Number.isInteger(partie.longueur) ? partie.longueur : 5,
+        mode: partie.mode === 'difficile' ? 'difficile' : 'libre',
+    };
+}
+
+export function recupererToutesLesParties() {
+    return recupererHistorique()
         .filter((partie) => partie && typeof partie === 'object')
-        .map((partie) => ({
-            pseudo: typeof partie.pseudo === 'string' ? partie.pseudo : 'Anonyme',
-            mot: typeof partie.mot === 'string' ? partie.mot : '—',
-            essais: Number.isInteger(partie.essais) ? partie.essais : '—',
-            score: Number.isFinite(partie.score) ? partie.score : 0,
-            mode: partie.mode === 'quotidienne' ? 'quotidienne' : 'libre',
-            jour: typeof partie.jour === 'string' ? partie.jour : null,
-            temps: Number.isFinite(partie.temps) ? partie.temps : null,
-            date: typeof partie.date === 'string' ? partie.date : null,
-        }))
-        .sort((premier, second) => second.score - premier.score);
-    return limite ? classement.slice(0, NOMBRE_MAX_DE_PARTIES) : classement;
+        .map(normaliserPartie)
+        .sort((premier, second) => second.score - premier.score)
 }
 
-export function recupererClassementQuotidien(jour) {
-    return recupererClassement(false)
-        .filter((partie) => partie.mode === 'quotidienne' && partie.jour === jour)
-        .sort((premier, second) => second.score - premier.score || (premier.temps ?? Infinity) - (second.temps ?? Infinity));
+export function recupererClassement() {
+    return recupererToutesLesParties().slice(0, NOMBRE_MAX_DE_PARTIES);
 }
 
-export function enregistrerPartie(pseudo, mot, essais, score, options = {}) {
+export function enregistrerPartie(pseudo, mot, essais, score, longueur = mot.length, mode = 'libre') {
     const partie = {
         pseudo: pseudo.trim() || 'Anonyme',
         mot,
@@ -55,6 +55,8 @@ export function enregistrerPartie(pseudo, mot, essais, score, options = {}) {
         jour: options.jour ?? null,
         temps: Number.isFinite(options.temps) ? options.temps : null,
         victoire: score > 0,
+        longueur,
+        mode,
         date: new Date().toISOString(),
     };
 

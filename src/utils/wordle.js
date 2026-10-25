@@ -50,3 +50,35 @@ export function verifierProposition(proposition, motSecret) {
 
     return resultats;
 }
+
+export function verifierModeDifficile(proposition, essais) {
+    const lettresFixes = {};
+    const lettresRequises = {};
+
+    essais.forEach(({ lettres, resultats }) => {
+        resultats.forEach((resultat, index) => {
+            const lettre = lettres[index];
+            if (resultat === 'vert') {
+                lettresFixes[index] = lettre;
+            }
+            if (resultat === 'jaune' || resultat === 'vert') {
+                lettresRequises[lettre] = (lettresRequises[lettre] || 0) + 1;
+            }
+        });
+    });
+
+    for (const [position, lettre] of Object.entries(lettresFixes)) {
+        if (proposition[Number(position)] !== lettre) {
+            return `Mode difficile : la lettre ${lettre} révélée en vert doit rester en position ${Number(position) + 1}.`;
+        }
+    }
+
+    for (const [lettre, nombreRequis] of Object.entries(lettresRequises)) {
+        const nombrePresent = proposition.split('').filter((caractere) => caractere === lettre).length;
+        if (nombrePresent < nombreRequis) {
+            return `Mode difficile : la lettre ${lettre} révélée en jaune doit être réutilisée dans votre proposition.`;
+        }
+    }
+
+    return null;
+}

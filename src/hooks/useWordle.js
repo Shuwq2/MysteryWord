@@ -1,36 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-    millisecondesAvantMinuit,
     normaliserMot,
-    obtenirJourUniversel,
-    tirerMotDuJour,
     tirerMotSecret,
+    verifierModeDifficile,
     verifierProposition,
 } from '../utils/wordle.js';
 import { enregistrerPartie } from '../utils/classement.js';
 
-const NOMBRE_DE_LIGNES = 6;
-const POINTS_PAR_ESSAI = [600, 500, 400, 300, 200, 100];
 const URL_API_WIKTIONNAIRE = 'https://fr.wiktionary.org/w/api.php';
 const DELAI_VERIFICATION = 5000;
 
-const CLE_PARTIE_QUOTIDIENNE = 'mysteryword-partie-quotidienne';
-
-function lirePartieQuotidienne(jour) {
-    try {
-        const partie = JSON.parse(localStorage.getItem(CLE_PARTIE_QUOTIDIENNE) || 'null');
-        return partie?.jour === jour ? partie : null;
-    } catch {
-        return null;
-    }
-}
-
 export default function useWordle(motsSecrets, longueurDuMot, mode = 'libre') {
-    const jour = obtenirJourUniversel();
-    const partieSauvegardee = mode === 'quotidienne' ? lirePartieQuotidienne(jour) : null;
-    const [motSecret, setMotSecret] = useState(() => (
-        mode === 'quotidienne' ? tirerMotDuJour(motsSecrets, jour) : tirerMotSecret(motsSecrets)
-    ));
+    const nombreDeLignes = longueurDuMot + 1;
+    const pointsParEssai = Array.from(
+        { length: nombreDeLignes },
+        (_, index) => (nombreDeLignes - index) * 100,
+    );
+    const multiplicateur = (longueurDuMot === 6 ? 1.5 : longueurDuMot === 7 ? 2 : 1)
+        * (mode === 'difficile' ? 1.5 : 1);
+    const [motSecret, setMotSecret] = useState(() => tirerMotSecret(motsSecrets));
     const [proposition, setProposition] = useState(() => Array(longueurDuMot).fill(''));
     const [essais, setEssais] = useState(() => partieSauvegardee?.essais ?? []);
     const [resultatPartie, setResultatPartie] = useState(() => partieSauvegardee?.resultatPartie ?? null);
@@ -91,13 +79,16 @@ export default function useWordle(motsSecrets, longueurDuMot, mode = 'libre') {
         }
 
         const pseudo = localStorage.getItem('mysteryword-pseudo') || '';
-        enregistrerPartie(pseudo, motSecret, essais.length, resultatPartie.score, {
+        enregistrerPartie(
+            pseudo,
+            motSecret,
+            essais.length,
+            resultatPartie.score,
+            longueurDuMot,
             mode,
-            jour: mode === 'quotidienne' ? jour : null,
-            temps: mode === 'quotidienne' ? tempsEcoule : null,
-        });
+        );
         scoreEnregistre.current = true;
-    }, [essais.length, jour, mode, motSecret, resultatPartie, tempsEcoule]);
+    }, [essais.length, longueurDuMot, mode, motSecret, resultatPartie]);
 
     function activerSaisie() {
         if (!resultatPartie && !verificationEnCours) {
@@ -111,7 +102,7 @@ export default function useWordle(motsSecrets, longueurDuMot, mode = 'libre') {
         const mot = normaliserMot(proposition.join('').toUpperCase());
         if (
             mot.length !== longueurDuMot
-            || essais.length === NOMBRE_DE_LIGNES
+            || essais.length === nombreDeLignes
             || resultatPartie
             || verificationEnCours
         ) {
@@ -120,6 +111,14 @@ export default function useWordle(motsSecrets, longueurDuMot, mode = 'libre') {
 
         setVerificationEnCours(true);
         setPropositionRefusee(null);
+        const messageModeDifficile = mode === 'difficile'
+            ? verifierModeDifficile(mot, essais)
+            : null;
+        if (messageModeDifficile) {
+            setPropositionRefusee(messageModeDifficile);
+            setVerificationEnCours(false);
+            return;
+        }
         verifierMot(mot)
             .then((motValide) => {
                 if (!motValide) {
@@ -140,9 +139,9 @@ export default function useWordle(motsSecrets, longueurDuMot, mode = 'libre') {
                 if (resultats.every((resultat) => resultat === 'vert')) {
                     setResultatPartie({
                         statut: 'victoire',
-                        score: POINTS_PAR_ESSAI[nouveauxEssais.length - 1],
+                        score: Math.round(pointsParEssai[nouveauxEssais.length - 1] * multiplicateur),
                     });
-                } else if (nouveauxEssais.length === NOMBRE_DE_LIGNES) {
+                } else if (nouveauxEssais.length === nombreDeLignes) {
                     setResultatPartie({
                         statut: 'defaite',
                         score: 0,

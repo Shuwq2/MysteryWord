@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
-export default function FinPartie({ resultatPartie, motSecret, onRejouer, essais, mode, jour }) {
+export default function FinPartie({ resultatPartie, motSecret, onRejouer, longueur, essais, mode, jour }) {
     const navigate = useNavigate();
     const [messagePartage, setMessagePartage] = useState('');
 
@@ -22,7 +22,7 @@ export default function FinPartie({ resultatPartie, motSecret, onRejouer, essais
         <>
             <p className="message-fin" role="status">
                 {resultatPartie.statut === 'victoire'
-                    ? `Victoire ! Score : ${resultatPartie.score} points.`
+                    ? `Victoire ! Score : ${resultatPartie.score} points (${longueur} lettres, ${mode === 'difficile' ? 'mode difficile' : 'partie libre'}).`
                     : <>Défaite ! Le mot était <strong>{motSecret}</strong>. Score : 0 point.</>}
             </p>
             <a

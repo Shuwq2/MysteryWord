@@ -15,6 +15,10 @@
     margin-top: 1.5rem;
 }
 
+.page-classement .tableau-classement {
+    overflow-x: auto;
+}
+
 .page-statistiques .statistiques {
     width: min(100%, 520px);
     margin: 0 auto;
