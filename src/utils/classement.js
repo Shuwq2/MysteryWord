@@ -38,7 +38,7 @@ export function recupererToutesLesParties() {
     return recupererHistorique()
         .filter((partie) => partie && typeof partie === 'object')
         .map(normaliserPartie)
-        .sort((premier, second) => second.score - premier.score)
+        .sort((premier, second) => second.score - premier.score);
 }
 
 export function recupererClassement() {
@@ -51,9 +51,6 @@ export function enregistrerPartie(pseudo, mot, essais, score, longueur = mot.len
         mot,
         essais,
         score,
-        mode: options.mode === 'quotidienne' ? 'quotidienne' : 'libre',
-        jour: options.jour ?? null,
-        temps: Number.isFinite(options.temps) ? options.temps : null,
         victoire: score > 0,
         longueur,
         mode,
