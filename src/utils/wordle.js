@@ -53,30 +53,39 @@ export function verifierProposition(proposition, motSecret) {
 
 export function verifierModeDifficile(proposition, essais) {
     const lettresFixes = {};
-    const lettresRequises = {};
+    const occurrencesRequises = {};
 
     essais.forEach(({ lettres, resultats }) => {
+        const occurrencesDeLaLigne = {};
         resultats.forEach((resultat, index) => {
-            const lettre = lettres[index];
+            const lettre = normaliserMot(lettres[index]).toUpperCase();
             if (resultat === 'vert') {
                 lettresFixes[index] = lettre;
             }
             if (resultat === 'jaune' || resultat === 'vert') {
-                lettresRequises[lettre] = (lettresRequises[lettre] || 0) + 1;
+                occurrencesDeLaLigne[lettre] = (occurrencesDeLaLigne[lettre] || 0) + 1;
             }
+        });
+
+        Object.entries(occurrencesDeLaLigne).forEach(([lettre, nombre]) => {
+            occurrencesRequises[lettre] = Math.max(
+                occurrencesRequises[lettre] || 0,
+                nombre,
+            );
         });
     });
 
+    const propositionNormalisee = normaliserMot(proposition).toUpperCase();
     for (const [position, lettre] of Object.entries(lettresFixes)) {
-        if (proposition[Number(position)] !== lettre) {
+        if (propositionNormalisee[Number(position)] !== lettre) {
             return `Mode difficile : la lettre ${lettre} révélée en vert doit rester en position ${Number(position) + 1}.`;
         }
     }
 
-    for (const [lettre, nombreRequis] of Object.entries(lettresRequises)) {
-        const nombrePresent = proposition.split('').filter((caractere) => caractere === lettre).length;
+    for (const [lettre, nombreRequis] of Object.entries(occurrencesRequises)) {
+        const nombrePresent = propositionNormalisee.split('').filter((caractere) => caractere === lettre).length;
         if (nombrePresent < nombreRequis) {
-            return `Mode difficile : la lettre ${lettre} révélée en jaune doit être réutilisée dans votre proposition.`;
+            return `Mode difficile : la lettre ${lettre} révélée en jaune ou en vert doit être réutilisée au moins ${nombreRequis} fois dans votre proposition.`;
         }
     }
 
